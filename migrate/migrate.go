@@ -8,9 +8,13 @@ import (
 )
 
 func main() {
-	os.Setenv("GO_ENV", "dev")
+	//環境変数を設定
+	os.Setenv("GO_ENV", "dev") //本番環境ではコメントアウトしたほうがいい？
+
 	dbConn := db.NewDB()
 	defer fmt.Println("Successfully Migrated")
 	defer db.CloseDB(dbConn)
-	dbConn.AutoMigrate(&model.User{}, &model.Task{})
+
+	// DBにテーブルを作成
+	dbConn.AutoMigrate(&model.User{}, &model.Work{})
 }
