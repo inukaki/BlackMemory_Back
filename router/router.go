@@ -47,6 +47,7 @@ func NewRouter(uc controller.IUserController, wc controller.IWorkController) *ec
 		TokenLookup: "cookie:token",
 	}))
 	w.POST("", wc.CreateWork)
+	w.PUT("/:workId", wc.UpdateWork)
 
 	return e
 }
