@@ -10,7 +10,7 @@ import (
 type IWorkRepository interface {
 	CreateWork(work *model.Work) error
 	UpdateWork(work *model.Work, userId uint, workId uint) error
-	GetWorkById(work *model.Work, workId uint) error
+	GetWorkByDate(work *model.Work, userId uint, workDate string) error
 }
 
 type workRepository struct {
@@ -39,8 +39,8 @@ func (wr *workRepository) UpdateWork(work *model.Work, userId uint, workId uint)
 	return nil
 }
 
-func (wr *workRepository) GetWorkById(work *model.Work, workId uint) error {
-	if err := wr.db.First(work, workId).Error; err != nil {
+func (wr *workRepository) GetWorkByDate(work *model.Work, userId uint, workDate string) error {
+	if err := wr.db.Where("user_id = ? AND date = ?", userId, workDate).First(work).Error; err != nil {
 		return err
 	}
 	return nil

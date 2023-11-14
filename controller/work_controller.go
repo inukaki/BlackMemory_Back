@@ -13,7 +13,7 @@ import (
 type IWorkController interface {
 	CreateWork(c echo.Context) error
 	UpdateWork(c echo.Context) error
-	GetWorkById(c echo.Context) error
+	GetWorkByDate(c echo.Context) error
 }
 
 type workController struct {
@@ -60,10 +60,12 @@ func (wc *workController) UpdateWork(c echo.Context) error {
 	return c.JSON(http.StatusOK, workRes)
 }
 
-func (wc *workController) GetWorkById(c echo.Context) error {
-	id := c.Param("workId")
-	taskId, _ := strconv.Atoi(id)
-	workRes, err := wc.wu.GetWorkById(uint(taskId))
+func (wc *workController) GetWorkByDate(c echo.Context) error {
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+	userId := claims["user_id"]
+	workDate := c.Param("workDate")
+	workRes, err := wc.wu.GetWorkByDate(uint(userId.(float64)), string(workDate))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
