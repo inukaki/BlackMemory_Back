@@ -48,6 +48,7 @@ func NewRouter(uc controller.IUserController, wc controller.IWorkController) *ec
 	}))
 	w.POST("", wc.CreateWork)
 	w.PUT("/:workId", wc.UpdateWork)
+	w.GET("/:workId", wc.GetWorkById)
 
 	return e
 }

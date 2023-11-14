@@ -10,6 +10,7 @@ import (
 type IWorkRepository interface {
 	CreateWork(work *model.Work) error
 	UpdateWork(work *model.Work, userId uint, workId uint) error
+	GetWorkById(work *model.Work, workId uint) error
 }
 
 type workRepository struct {
@@ -34,6 +35,13 @@ func (wr *workRepository) UpdateWork(work *model.Work, userId uint, workId uint)
 	}
 	if result.RowsAffected < 1 {
 		return fmt.Errorf("object does not exist")
+	}
+	return nil
+}
+
+func (wr *workRepository) GetWorkById(work *model.Work, workId uint) error {
+	if err := wr.db.First(work, workId).Error; err != nil {
+		return err
 	}
 	return nil
 }

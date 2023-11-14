@@ -13,6 +13,7 @@ import (
 type IWorkController interface {
 	CreateWork(c echo.Context) error
 	UpdateWork(c echo.Context) error
+	GetWorkById(c echo.Context) error
 }
 
 type workController struct {
@@ -53,6 +54,16 @@ func (wc *workController) UpdateWork(c echo.Context) error {
 	}
 	// work.UserID = uint(userId.(float64))
 	workRes, err := wc.wu.UpdateWork(work, uint(userId.(float64)), uint(workId))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+	return c.JSON(http.StatusOK, workRes)
+}
+
+func (wc *workController) GetWorkById(c echo.Context) error {
+	id := c.Param("workId")
+	taskId, _ := strconv.Atoi(id)
+	workRes, err := wc.wu.GetWorkById(uint(taskId))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
