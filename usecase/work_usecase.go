@@ -7,7 +7,7 @@ import (
 
 type IWorkUsecase interface {
 	CreateWork(work model.Work) (model.WorkResponse, error)
-	UpdateWork(work model.Work, userId uint, workId uint) (model.WorkResponse, error)
+	UpdateWork(work model.Work, userId uint, workDate string) (model.WorkResponse, error)
 	GetWorkByDate(userId uint, workDate string) (model.WorkResponse, error)
 }
 
@@ -34,8 +34,8 @@ func (wu *workUsecase) CreateWork(work model.Work) (model.WorkResponse, error) {
 	return resWork, nil
 }
 
-func (wu *workUsecase) UpdateWork(work model.Work, userId uint, workId uint) (model.WorkResponse, error) {
-	if err := wu.wr.UpdateWork(&work, userId, workId); err != nil {
+func (wu *workUsecase) UpdateWork(work model.Work, userId uint, workDate string) (model.WorkResponse, error) {
+	if err := wu.wr.UpdateWork(&work, userId, workDate); err != nil {
 		return model.WorkResponse{}, err
 	}
 	resWork := model.WorkResponse{

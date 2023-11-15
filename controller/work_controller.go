@@ -4,7 +4,6 @@ import (
 	"go_rest_api/model"
 	"go_rest_api/usecase"
 	"net/http"
-	"strconv"
 
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/labstack/echo/v4"
@@ -45,15 +44,15 @@ func (wc *workController) UpdateWork(c echo.Context) error {
 	user := c.Get("user").(*jwt.Token)
 	claims := user.Claims.(jwt.MapClaims)
 	userId := claims["user_id"]
-	id := c.Param("workId")
-	workId, _ := strconv.Atoi(id)
+	workDate := c.Param("workDate")
+	// workId, _ := strconv.Atoi(id)
 
 	work := model.Work{}
 	if err := c.Bind(&work); err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 	// work.UserID = uint(userId.(float64))
-	workRes, err := wc.wu.UpdateWork(work, uint(userId.(float64)), uint(workId))
+	workRes, err := wc.wu.UpdateWork(work, uint(userId.(float64)), workDate)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
