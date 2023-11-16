@@ -25,8 +25,8 @@ func NewRouter(uc controller.IUserController, wc controller.IWorkController) *ec
 		CookiePath:     "/",
 		CookieDomain:   os.Getenv("API_DOMAIN"),
 		CookieHTTPOnly: true,
-		CookieSameSite: http.SameSiteNoneMode, // こっちだとsecureが有効になり、postmanでのテストができない
-		// CookieSameSite: http.SameSiteDefaultMode, // こっちだとsecureが無効になり、postmanでのテストができる
+		// CookieSameSite: http.SameSiteNoneMode, // こっちだとsecureが有効になり、postmanでのテストができない
+		CookieSameSite: http.SameSiteDefaultMode, // こっちだとsecureが無効になり、postmanでのテストができる
 		// CookieMazAge:   60,
 	}))
 	e.POST("/signup", uc.SingUp)
@@ -49,8 +49,9 @@ func NewRouter(uc controller.IUserController, wc controller.IWorkController) *ec
 		TokenLookup: "cookie:token",
 	}))
 	w.POST("", wc.CreateWork)
-	w.PUT("/:workId", wc.UpdateWork)
+	w.PUT("/:workDate", wc.UpdateWork)
 	w.GET("/:workDate", wc.GetWorkByDate)
+	w.GET("", wc.GetAllWorks)
 
 	return e
 }
