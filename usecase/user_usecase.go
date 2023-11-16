@@ -1,10 +1,12 @@
 package usecase
 
 import (
+	"errors"
 	"go_rest_api/model"
 	"go_rest_api/repository"
 	"go_rest_api/validator"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
@@ -33,12 +35,17 @@ func (uu *userUseCase) SignUp(user model.User) (model.UserResponse, error) {
 	if err != nil {
 		return model.UserResponse{}, err
 	}
-	newUser := model.User{Email: user.Email, Password: string(hash)}
+	newUser := model.User{Email: user.Email, Name: user.Name, Password: string(hash)}
 	if err := uu.ur.CreateUser(&newUser); err != nil {
+		// 同じEmailのユーザーが既に存在する場合
+		if strings.Contains(err.Error(), "duplicate") || strings.Contains(err.Error(), "Duplicate") {
+			return model.UserResponse{}, errors.New("a user with this email already exists")
+		}
 		return model.UserResponse{}, err
 	}
 	resUser := model.UserResponse{
 		ID:    newUser.ID,
+		Name:  newUser.Name,
 		Email: newUser.Email,
 	}
 
