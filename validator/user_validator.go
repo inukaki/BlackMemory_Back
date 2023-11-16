@@ -28,7 +28,12 @@ func (uv *userValidator) UserValidate(user model.User) error {
 		validation.Field(
 			&user.Password,
 			validation.Required.Error("password is required"),
-			validation.RuneLength(6, 30).Error("password must be between 1 and 10 characters"),
+			validation.RuneLength(6, 30).Error("password must be between 6 and 30 characters"),
+		),
+		validation.Field(
+			&user.Name,
+			validation.Required.Error("name is required"),
+			validation.RuneLength(1, 30).Error("name must be between 1 and 30 characters"),
 		),
 	)
 }
