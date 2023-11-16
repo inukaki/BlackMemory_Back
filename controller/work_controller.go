@@ -13,6 +13,7 @@ type IWorkController interface {
 	CreateWork(c echo.Context) error
 	UpdateWork(c echo.Context) error
 	GetWorkByDate(c echo.Context) error
+	GetAllWorks(c echo.Context) error
 }
 
 type workController struct {
@@ -69,4 +70,15 @@ func (wc *workController) GetWorkByDate(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 	return c.JSON(http.StatusOK, workRes)
+}
+
+func (wc *workController) GetAllWorks(c echo.Context) error {
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+	userId := claims["user_id"]
+	worksRes, err := wc.wu.GetAllWorks(uint(userId.(float64)))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+	return c.JSON(http.StatusOK, worksRes)
 }

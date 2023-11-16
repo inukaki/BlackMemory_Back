@@ -51,6 +51,7 @@ func NewRouter(uc controller.IUserController, wc controller.IWorkController) *ec
 	w.POST("", wc.CreateWork)
 	w.PUT("/:workDate", wc.UpdateWork)
 	w.GET("/:workDate", wc.GetWorkByDate)
+	w.GET("", wc.GetAllWorks)
 
 	return e
 }

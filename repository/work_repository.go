@@ -12,6 +12,7 @@ type IWorkRepository interface {
 	CreateWork(work *model.Work) error
 	UpdateWork(work *model.Work, userId uint, workDate string) error
 	GetWorkByDate(work *model.Work, userId uint, workDate string) error
+	GetAllWorks(works *[]model.Work, userId uint) error
 }
 
 type workRepository struct {
@@ -42,6 +43,13 @@ func (wr *workRepository) UpdateWork(work *model.Work, userId uint, workDate str
 
 func (wr *workRepository) GetWorkByDate(work *model.Work, userId uint, workDate string) error {
 	if err := wr.db.Where("user_id = ? AND date = ?", userId, workDate).First(work).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+func (wr *workRepository) GetAllWorks(works *[]model.Work, userId uint) error {
+	if err := wr.db.Where("user_id = ?", userId).Order("date").Find(works).Error; err != nil {
 		return err
 	}
 	return nil
