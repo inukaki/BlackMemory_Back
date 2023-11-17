@@ -27,7 +27,7 @@ func NewUserUseCase(ur repository.IUserRepository, uv validator.IUserValidator) 
 }
 
 func (uu *userUseCase) SignUp(user model.User) (model.UserResponse, error) {
-	if err := uu.uv.UserValidate(user); err != nil {
+	if err := uu.uv.UserCreateValidate(user); err != nil {
 		return model.UserResponse{}, err
 	}
 
@@ -53,7 +53,7 @@ func (uu *userUseCase) SignUp(user model.User) (model.UserResponse, error) {
 }
 
 func (uu *userUseCase) Login(user model.User) (string, error) {
-	if err := uu.uv.UserValidate(user); err != nil {
+	if err := uu.uv.UserLoginValidate(user); err != nil {
 		return "", err
 	}
 	storedUser := model.User{}
