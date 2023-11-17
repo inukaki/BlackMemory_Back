@@ -2,6 +2,7 @@ package router
 
 import (
 	"go_rest_api/controller"
+	"net/http"
 	//"net/http"
 	"os"
 
@@ -20,6 +21,12 @@ func NewRouter(uc controller.IUserController, wc controller.IWorkController) *ec
 			echo.HeaderAccessControlAllowHeaders, echo.HeaderXCSRFToken},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
 		AllowCredentials: true,
+	}))
+	e.Use(middleware.CSRFWithConfig(middleware.CSRFConfig{
+		CookiePath:     "/",
+		CookieDomain:   os.Getenv("API_DOMAIN"),
+		CookieHTTPOnly: true,
+		CookieSameSite: http.SameSiteNoneMode,
 	}))
 	e.POST("/signup", uc.SingUp)
 	e.POST("/login", uc.Login)
